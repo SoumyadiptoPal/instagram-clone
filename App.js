@@ -1,10 +1,10 @@
 import { View, Text, SafeAreaView, StyleSheet, Platform, StatusBar } from "react-native";
-import SignedInStack from "./Navigation";
+import AuthNavigation from "./authNavigation";
 
 export default function App() {
   return (
     <SafeAreaView style={styles.AndroidSafeArea}>
-    <SignedInStack/>
+    <AuthNavigation/>
     </SafeAreaView>
   );
 }

@@ -1,11 +1,21 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Octicons,Entypo, AntDesign } from '@expo/vector-icons'; 
+import { firebase } from '../../firebase';
+import { getAuth, signOut } from 'firebase/auth';
+const handleSignout=()=>{
+const auth=getAuth(firebase);
+signOut(auth).then(() => {
+  console.log("Sign out Successful")
+}).catch((error) => {
+  console.log("Error Sign out")
+});
 
+}
 const Header = ({navigation}) => {
   return (
     <View style={style.container}>
-        <TouchableOpacity onPress={()=> navigation.push('LoginScreen')}>
+        <TouchableOpacity onPress={handleSignout}>
       <Image 
       style={style.logo}
       source={require('../../assets/logo.png')}/>
