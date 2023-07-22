@@ -1,18 +1,40 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { Divider } from 'react-native-elements';
 import { Octicons,Entypo, AntDesign } from '@expo/vector-icons'; 
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import { firebase,db,auth } from '../../firebase';
+import { currentUser } from "firebase/auth";
+import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
 const Post = ({post}) => {
+  const handleLike=async (post)=>{
+    const email=auth.currentUser.email;
+    const currentLikeStatus=!post.likes_by_users.includes(
+      email
+    )
+    const postRef = doc(db,"users",email,"posts",post.id);
+    const likesUpdate = currentLikeStatus
+    ? arrayUnion(email)
+    : arrayRemove(email);
+
+  await updateDoc(postRef, { likes_by_users: likesUpdate })
+    .then(() => {
+      console.log("Document Updated");
+    })
+    .catch((error) => {
+      console.error("Error while updating", error);
+    });
+
+  }
   return (
     <View style={{marginBottom: 30}}>
         <Divider width={1} orientation='vertical'/>
       <PostHeader post={post}/>
       <PostImage post={post}/>
       <View style={{marginHorizontal:15, marginTop: 10}}>
-      <PostFooter/>
+      <PostFooter post={post} handleLike={handleLike}/>
       <Likes post={post}/>
       <Caption post={post}/>
       {
@@ -46,11 +68,13 @@ const PostImage=({post})=>(
   </View>
 )
 
-const PostFooter=()=>(
+const PostFooter=({handleLike, post})=>(
   <View style={{flexDirection:"row"}}>
     <View style={style.leftFooterIcons}>
-    <TouchableOpacity>
-    <Entypo name="heart-outlined" size={28} color="white" />
+    <TouchableOpacity onPress={()=>handleLike(post)}>
+    {post.likes_by_users.includes(
+      auth.currentUser.email
+    )? <AntDesign name="heart" size={28} color="red" />:<Entypo name="heart-outlined" size={28} color="white"/>}
     </TouchableOpacity>
     <TouchableOpacity>
     <Feather name="message-circle" size={28} color="white" />
@@ -67,7 +91,7 @@ const PostFooter=()=>(
 
 const Likes=({post})=>(
   <View style={{flexDirection:'row', marginTop:4}}>
-  <Text style={{color:'white', fontWeight:"600"}}>{post.likes.toLocaleString('en')} likes</Text>
+  <Text style={{color:'white', fontWeight:"600"}}>{post.likes_by_users.length.toLocaleString('en')} likes</Text>
   </View>
 )
 
