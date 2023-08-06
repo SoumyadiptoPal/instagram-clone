@@ -4,15 +4,16 @@ import Header from "../components/home/Header";
 import Stories from "../components/home/Stories";
 import Post from "../components/home/Post";
 import BottomTabs, { bottomTabIcons } from "../components/home/BottomTabs";
-import { firebase, db } from "../firebase";
-import { collection, collectionGroup, getDocs, orderBy, onSnapshot } from "firebase/firestore";
+import { firebase, db,auth } from "../firebase";
+import { currentUser } from "firebase/auth";
+import { collection, collectionGroup, getDocs, orderBy, onSnapshot, getDoc,doc } from "firebase/firestore";
 
 const HomeScreen = ({ navigation }) => {
   const [posts,setPosts]=useState([]);
-
+  const [profile,setProfile]=useState({});
   const scrollViewRef = useRef(null);
   const [scrollOffset, setScrollOffset] = useState(0);
-
+  const currentUser=auth.currentUser;
   const handleContentSizeChange = (contentWidth, contentHeight) => {
     if (scrollViewRef.current) {
       const newScrollOffset = contentHeight - scrollOffset;
@@ -30,6 +31,8 @@ const HomeScreen = ({ navigation }) => {
       }));
       setPosts(fetchedPosts);
       // console.log(posts);
+      const profil=await getDoc(doc(db,"users",currentUser.email));
+      setProfile(profil.data());
     }
 
     const unsubscribe = onSnapshot(collectionGroup(db, "posts"), (snapshot) => {
@@ -53,7 +56,7 @@ const HomeScreen = ({ navigation }) => {
           <Post key={index} post={post} />
         ))}
       </ScrollView>
-      <BottomTabs icons={bottomTabIcons} />
+      <BottomTabs icons={bottomTabIcons} navigation={navigation} profile={profile}/>
     </SafeAreaView>
   );
 };

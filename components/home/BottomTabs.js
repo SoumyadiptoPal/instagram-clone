@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image } from 'react-native'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Octicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -7,6 +7,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Divider } from 'react-native-elements';
 import { StyleSheet } from 'react-native';
+import { firebase,db,auth } from '../../firebase';
+import { getDoc } from 'firebase/firestore';
 
 export const bottomTabIcons=[
     {
@@ -29,25 +31,26 @@ export const bottomTabIcons=[
         active:<MaterialCommunityIcons name="shopping" size={24} color="white" />,
         inactive: <MaterialCommunityIcons name="shopping-outline" size={24} color="white" />
     },
-    {
-      name: "Profile",
-      active: <Image source={{uri:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Pierre-Person.jpg/400px-Pierre-Person.jpg"}} style={{width:30,
-      height: 30,
-      borderRadius:20,
-      borderColor: 'white',
-    borderWidth:2}}/>,
-      inactive: <Image source={{uri:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Pierre-Person.jpg/400px-Pierre-Person.jpg"}} style={{width:30,
-      height: 30,
-      borderRadius:20,
-      borderColor: 'white',
-      borderWidth:0}} />
-    }
+    // {
+    //   name: "Profile",
+    //   active: <Image source={{uri:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Pierre-Person.jpg/400px-Pierre-Person.jpg"}} style={{width:30,
+    //   height: 30,
+    //   borderRadius:20,
+    //   borderColor: 'white',
+    // borderWidth:2}}
+    // onPress={()=> navigation.push('ProfileScreen')}/>,
+    //   inactive: <Image source={{uri:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Pierre-Person.jpg/400px-Pierre-Person.jpg"}} style={{width:30,
+    //   height: 30,
+    //   borderRadius:20,
+    //   borderColor: 'white',
+    //   borderWidth:0}} 
+    //   onPress={()=> navigation.push('ProfileScreen')}/>
+    // }
     
 ]
 
-const BottomTabs = ({icons}) => {
+const BottomTabs = ({icons, navigation, profile}) => {
   const [activeTab, setActiveTab]=useState("Home")
-
   const Icon=({icon})=>(
     <View>
     <TouchableOpacity onPress={()=>setActiveTab(icon.name)}>
@@ -62,7 +65,16 @@ const BottomTabs = ({icons}) => {
       {icons.map((icon,index)=>(
         <Icon key={index} icon={icon}/>
       ))}
-      
+      <TouchableOpacity
+      onPress={()=> navigation.push('ProfileScreen',profile)}
+      >
+      <Image source={{uri:profile.profile_picture}} style={{width:30,
+      height: 30,
+      borderRadius:20,
+      borderColor: 'white',
+      borderWidth:2}}
+      />
+      </TouchableOpacity>
     </View>
     </View>
   )
