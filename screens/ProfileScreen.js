@@ -15,10 +15,9 @@ const ProfileScreen = ({navigation,route}) => {
   const currentUser=auth.currentUser;
   const [posts,setPosts]=useState();
   
-  
   useEffect(() => {
     const fetchData=async()=>{
-    const querySnapshot = await getDocs(collection(db, "users", currentUser.email, "posts"));
+    const querySnapshot = await getDocs(collection(db, "users", profile.email, "posts"));
     const fetchedPosts = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -31,7 +30,7 @@ const ProfileScreen = ({navigation,route}) => {
   return (
     <SafeAreaView style={styles.container}>
         <Header navigation={navigation} profile={profile}/>
-        <Top profile={profile}/>
+        <Top profile={profile} count={(posts)?posts.length:0}/>
         <Middle profile={profile} currentUser={currentUser}/>
         <ImageGrid data={posts}/>
     </SafeAreaView>
@@ -47,7 +46,7 @@ const Header=({navigation, profile})=>(
   </View>
   )
 
-  const Top=({profile})=>{
+  const Top=({profile,count})=>{
 
     return(
       <View>
@@ -58,15 +57,15 @@ const Header=({navigation, profile})=>(
           </View>
           <View style={styles.cont2}>
             <View style={{display:'flex', alignItems:'center'}}>
-              <Text style={{color:"white", fontWeight:"bold"}}>100</Text>
+              <Text style={{color:"white", fontWeight:"bold"}}>{count}</Text>
               <Text style={{color:"white", fontWeight:"bold"}}>Posts</Text>
             </View>
             <View style={{display:'flex', alignItems:'center'}}>
-            <Text style={{color:"white", fontWeight:"bold"}}>100</Text>
+            <Text style={{color:"white", fontWeight:"bold"}}>{(profile.followers)?profile.followers.length:0}</Text>
               <Text style={{color:"white", fontWeight:"bold"}}>Followers</Text>
             </View>
             <View style={{display:'flex', alignItems:'center'}}>
-            <Text style={{color:"white", fontWeight:"bold"}}>100</Text>
+            <Text style={{color:"white", fontWeight:"bold"}}>{(profile.followers)?profile.followers.length:0}</Text>
               <Text style={{color:"white", fontWeight:"bold"}}>Following</Text>
             </View>
           </View>

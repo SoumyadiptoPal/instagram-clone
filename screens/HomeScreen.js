@@ -3,7 +3,7 @@ import React, { useEffect,useState,useRef } from "react";
 import Header from "../components/home/Header";
 import Stories from "../components/home/Stories";
 import Post from "../components/home/Post";
-import BottomTabs, { bottomTabIcons } from "../components/home/BottomTabs";
+import BottomTabs from "../components/home/BottomTabs";
 import { firebase, db,auth } from "../firebase";
 import { currentUser } from "firebase/auth";
 import { collection, collectionGroup, getDocs, orderBy, onSnapshot, getDoc,doc } from "firebase/firestore";
@@ -56,7 +56,9 @@ const HomeScreen = ({ navigation }) => {
           <Post key={index} post={post} />
         ))}
       </ScrollView>
-      <BottomTabs icons={bottomTabIcons} navigation={navigation} profile={profile}/>
+      {
+        profile && <BottomTabs navigation={navigation} profile={profile}/>
+      }
     </SafeAreaView>
   );
 };

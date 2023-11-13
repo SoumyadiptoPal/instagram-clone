@@ -47,19 +47,6 @@ useEffect(() => {
 }, [])
 
 const uploadPostToFire=async (imageUrl,caption)=>{
-  // const unsubscribe=db.collection('users').doc(firebase.auth().currentUser.email).collection('posts').add({
-  //   imageUrl: imageUrl,
-  //   user: currentLoggedInUser.username,
-  //   profile_picture: currentLoggedInUser.profilePicture,
-  //   owner_uid: firebase.auth().createUser.uid,
-  //   owner_email: firebase.auth().currentUser.email,
-  //   caption: caption,
-  //   createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-  //   likes_by_users: [],
-  //   comments: [],
-  // })
-  // .then(()=>navigation.goBack())
-  // return unsubscribe;
     const currentUser = auth.currentUser;
 
   const unsubscribe = await addDoc(collection(db, 'users', currentUser.email, 'posts'), {
